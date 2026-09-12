@@ -1,0 +1,5 @@
+package br.com.bemdoar.dto;
+import br.com.bemdoar.entity.AcaoSocial; import br.com.bemdoar.entity.Evidencia; import java.time.LocalDate; import java.util.*;
+public record AcaoSocialResponse(Long id,String titulo,String descricao,String objetivo,LocalDate dataInicio,LocalDate dataFim,String local,
+ String publicoAtendido,Integer estimativaBeneficiados,String situacao,String descricaoResultado,Integer beneficiadosReais,
+ List<Long> campanhas,List<Long> necessidades,List<Long> participacoes,List<EvidenciaResponse> evidencias){public static AcaoSocialResponse de(AcaoSocial a,List<Evidencia> ev){return new AcaoSocialResponse(a.getId(),a.getTitulo(),a.getDescricao(),a.getObjetivo(),a.getDataInicio(),a.getDataFim(),a.getLocal(),a.getPublicoAtendido(),a.getEstimativaBeneficiados(),a.getSituacao().name(),a.getDescricaoResultado(),a.getBeneficiadosReais(),a.getCampanhas().stream().map(x->x.getId()).toList(),a.getNecessidades().stream().map(x->x.getId()).toList(),a.getParticipacoes().stream().map(x->x.getId()).toList(),ev.stream().map(EvidenciaResponse::de).toList());}}

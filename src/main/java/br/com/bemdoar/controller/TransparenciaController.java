@@ -1,0 +1,2 @@
+package br.com.bemdoar.controller;import br.com.bemdoar.dto.*;import br.com.bemdoar.service.*;import org.springframework.web.bind.annotation.*;
+@RestController @RequestMapping("/api/transparencia")public class TransparenciaController{private final TransparenciaService s;public TransparenciaController(TransparenciaService s){this.s=s;}@GetMapping public TransparenciaResponse obter(){return s.obter();}}

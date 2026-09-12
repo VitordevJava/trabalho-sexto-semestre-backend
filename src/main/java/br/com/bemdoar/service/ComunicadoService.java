@@ -1,0 +1,9 @@
+package br.com.bemdoar.service;
+import br.com.bemdoar.dto.*;import br.com.bemdoar.entity.*;import br.com.bemdoar.enums.*;import br.com.bemdoar.exception.*;import br.com.bemdoar.repository.*;import org.springframework.stereotype.Service;import org.springframework.transaction.annotation.Transactional;import java.time.LocalDateTime;import java.util.*;
+@Service public class ComunicadoService{private final ComunicadoRepository repo;public ComunicadoService(ComunicadoRepository r){repo=r;}private Comunicado get(Long id){return repo.findById(id).orElseThrow(()->new RecursoNaoEncontradoException("Comunicado nao encontrado."));}
+ @Transactional(readOnly=true)public List<ComunicadoResponse> publicos(){return repo.findByTipoAndSituacaoOrderByDataPublicacaoDesc(TipoComunicado.PUBLICO,SituacaoComunicado.PUBLICADO).stream().map(ComunicadoResponse::de).toList();}
+ @Transactional(readOnly=true)public List<ComunicadoResponse> listar(){return repo.findAllByOrderByDataCriacaoDesc().stream().map(ComunicadoResponse::de).toList();}
+ @Transactional(readOnly=true)public ComunicadoResponse buscar(Long id){return ComunicadoResponse.de(get(id));}
+ @Transactional public ComunicadoResponse criar(ComunicadoRequest q){Comunicado c=new Comunicado();copiar(c,q);c.setSituacao(SituacaoComunicado.PUBLICADO);c.setDataCriacao(LocalDateTime.now());c.setDataPublicacao(LocalDateTime.now());return ComunicadoResponse.de(repo.save(c));}
+ @Transactional public ComunicadoResponse editar(Long id,ComunicadoRequest q){Comunicado c=get(id);copiar(c,q);return ComunicadoResponse.de(repo.save(c));}
+ @Transactional public ComunicadoResponse arquivar(Long id){Comunicado c=get(id);c.setSituacao(SituacaoComunicado.ARQUIVADO);return ComunicadoResponse.de(repo.save(c));}private void copiar(Comunicado c,ComunicadoRequest q){c.setTitulo(q.titulo());c.setConteudo(q.conteudo());c.setTipo(q.tipo());}}
